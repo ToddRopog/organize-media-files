@@ -1,4 +1,4 @@
-# ==============================================================================================
+﻿# ==============================================================================================
 # 
 # Microsoft PowerShell Source File 
 # 
@@ -14,7 +14,14 @@
 #
 # ============================================================================================== 
 
-[reflection.assembly]::loadfile( "C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll") 
+
+# These value work for Windows 10:
+[reflection.assembly]::loadfile( "C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Drawing.dll") 
+$MediaCreatedColumn = 208
+
+# For older versions of Windos you may need to use these values:
+#[reflection.assembly]::loadfile( "C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll") 
+#$MediaCreatedColumn = 191
 
 $SourceRootPath = ".\RecentUploads"
 $DestinationRootPath = ".\Years"
@@ -24,7 +31,7 @@ $global:ConfirmAll = $false
 function GetMediaCreatedDate($File) {
 	$Shell = New-Object -ComObject Shell.Application
 	$Folder = $Shell.Namespace($File.DirectoryName)
-	$CreatedDate = $Folder.GetDetailsOf($Folder.Parsename($File.Name), 191).Replace([char]8206, ' ').Replace([char]8207, ' ')
+	$CreatedDate = $Folder.GetDetailsOf($Folder.Parsename($File.Name), $MediaCreatedColumn).Replace([char]8206, ' ').Replace([char]8207, ' ')
 
 	if (($CreatedDate -as [DateTime]) -ne $null) {
 		return [DateTime]::Parse($CreatedDate)
